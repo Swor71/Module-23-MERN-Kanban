@@ -36,8 +36,28 @@ export function deleteNote(req, res) {
       res.status(500).send(err);
     }
 
-    note.remove(() => {
-      res.status(200).end();
+    Lane.findOne({ id: req.body.laneId }).exec((err, lane) => {
+      lane.notes = lane.notes.filter(item => req.params.noteId !== item.id);
+
+      lane.save(err => {
+        if (err) {
+          res.status(500).send(err);
+        }
+
+        note.remove(() => {
+          res.status(200).end();
+        });
+      });
     });
+  });
+}
+
+export function editNote(req, res) {
+  Note.findOneAndUpdate({ id: req.params.noteId }, { task: req.body.task }, (err, note) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+
+    return res.status(200).end();
   });
 }
