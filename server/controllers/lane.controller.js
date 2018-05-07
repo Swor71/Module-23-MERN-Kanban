@@ -37,11 +37,11 @@ export function deleteLane(req, res) {
 
     const notesIds = lane.notes.map(note => note.id);
 
-    Note.remove({ id: { $in: notesIds }}, (err) => {
+    Note.remove({ id: { $in: notesIds } }, (err) => {
       lane.remove(() => {
         res.status(200).end();
       });
-    });    
+    });
   });
 }
 
